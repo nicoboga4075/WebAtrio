@@ -1,0 +1,82 @@
+<main class="main">
+  <div class="content">
+    <div class="left-side">
+      <button (click)="goHome()">
+        <i class="fas fa-home"></i>
+      </button>
+      <h2>Persons</h2>
+      <ul>
+        <li *ngFor="let person of persons">
+          {{ person.fullName }}
+          <button (click)="selectPerson(person.id)"><i class="far fa-edit"></i></button>
+          <button (click)="deletePerson(person.id)"><i class="fas fa-trash"></i></button>
+        </li>
+      </ul>
+      <h3>{{ selectedPerson ? 'Edit Person' : 'Add Person' }}</h3>
+      <form [formGroup]="personForm" (ngSubmit)="submitForm()">
+        <label>
+          First Name :
+          <input type="text" formControlName="firstName" required />
+        </label>
+        <span *ngIf="checkErrorForm('firstName')" class="error-message"> First name is required.</span>
+        <br />
+        <label>
+          Last Name :
+          <input type="text" formControlName="lastName" required />
+        </label>
+        <span *ngIf="checkErrorForm('lastName')" class="error-message"> Last name is required.</span>
+        <br />
+        <label>
+          Birth Date :
+          <input type="date" formControlName="birthDate" required />
+        </label>
+        <span *ngIf="checkErrorForm('birthDate')" class="error-message"> Birth date is required. <br /></span>
+        <br />
+        <button type="submit" [disabled]="personForm.invalid || (selectedPerson && checkSameForm())">
+          <i class="{{ selectedPerson ? 'fas fa-check' : 'fas fa-plus' }}"></i>
+        </button>
+        <button type="button" [disabled]="checkEmptyForm()" (click)="resetForm()"><i class="{{ selectedPerson ? 'fas fa-xmark' : 'fas fa-eraser' }}"></i></button>
+      </form>
+    </div>
+    <div class="divider" role="separator" aria-label="Divider"></div>
+    <div class="right-side">
+      <div *ngIf="selectedPerson">
+        <h3>Person Details</h3>
+        <p><strong>ID :</strong>&nbsp;{{ selectedPerson.id }}</p>
+        <p><strong>First Name :</strong>&nbsp;{{ selectedPerson.firstName }}</p>
+        <p><strong>Last Name :</strong>&nbsp;{{ selectedPerson.lastName }}</p>
+        <p><strong>Birth Date :</strong>&nbsp;{{ selectedPerson.birthDate }}</p>
+        <p><strong>Age :</strong>&nbsp;{{ selectedPerson.age }}</p>
+        <p><strong>Latest Job :</strong>&nbsp;{{ selectedPerson.latestJob?.position }}</p>
+        <form [formGroup]="jobForm" (ngSubmit)="submitJobForm()">
+          <span *ngIf="dateError" class="error-message">
+            Start date must be earlier than or equal to end date.
+          </span>
+          <br />
+          <label>
+            Start Date :
+            <input type="date" formControlName="startDate" />
+          </label>
+          <br />
+          <label>
+            End Date :
+            <input type="date" formControlName="endDate" />
+          </label>
+          <br />
+          <button type="submit">
+            <i class="fas fa-search"></i>
+          </button>
+        </form>
+        <br />
+        <span *ngIf="jobsSearch.length === 0 && jobSearchPerformed">
+          No jobs found for the selected date range.
+        </span>
+        <ul *ngIf="jobsSearch.length > 0">
+          <li *ngFor="let job of jobsSearch">
+            {{ job.position }} ( {{ job.startDate }} -> {{ job.endDate }} )
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</main>

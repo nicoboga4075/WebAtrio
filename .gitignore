@@ -1,0 +1,6 @@
+
+/env
+*.vsidx
+/.vs
+*.pyc
+/.idea

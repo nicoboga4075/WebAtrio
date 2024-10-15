@@ -1,0 +1,67 @@
+<main class="main">
+  <div class="content">
+    <div class="left-side">
+      <button (click)="goHome()">
+        <i class="fas fa-home"></i>
+      </button>
+      <h2>Jobs</h2>
+      <ul>
+        <li *ngFor="let job of jobs">
+          {{ job.position  }} at {{ getCompanyName(job.companyId) }}
+          <button (click)="selectJob(job.id)"><i class="far fa-edit"></i></button>
+          <button (click)="deleteJob(job.id)"><i class="fas fa-trash"></i></button>
+        </li>
+      </ul>
+      <h3>{{ selectedJob ? 'Edit Job' : 'Add Job' }}</h3>
+      <form [formGroup]="jobForm" (ngSubmit)="submitForm()">
+        <label>
+          Position :
+          <input type="text" formControlName="position" required />
+        </label>
+        <span *ngIf="checkErrorForm('position')" class="error-message"> Position is required.</span>
+        <br />
+        <label>
+          Start Date :
+          <input type="date" formControlName="startDate" required />
+        </label>
+        <span *ngIf="checkErrorForm('startDate')" class="error-message"> Start Date is required.</span>
+        <br />
+        <label>
+          End Date :
+          <input type="date" formControlName="endDate" />
+        </label>
+        <br />
+        <label>
+          Company :
+          <select formControlName="companyId" required>
+            <option *ngFor="let company of companies" [value]="company.id">{{ company.name }}</option>
+          </select>
+        </label>
+        <span *ngIf="checkErrorForm('companyId')" class="error-message"> Company is required.</span>
+        <br />
+        <label>
+          Person :
+          <select formControlName="personId">
+            <option *ngFor="let person of persons" [value]="person.id">{{ person.firstName }} {{ person.lastName }}</option>
+          </select>
+        </label>
+        <span *ngIf="checkErrorForm('personId')" class="error-message"> Person is required.</span>
+        <br />
+        <button type="submit" [disabled]="jobForm.invalid || (selectedJob && checkSameForm())"><i class="{{ selectedJob ? 'fas fa-check' : 'fas fa-plus'}}"></i></button>
+        <button type="button" [disabled]="checkEmptyForm()" (click)="resetForm()"><i class="{{ selectedJob ? 'fas fa-xmark' : 'fas fa-eraser' }}"></i></button>
+      </form>
+    </div>
+    <div class="divider" role="separator" aria-label="Divider"></div>
+    <div class="right-side">
+      <div *ngIf="selectedJob">
+        <h3>Job Details</h3>
+        <p><strong>ID :</strong>&nbsp;{{ selectedJob.id }}</p>
+        <p><strong>Position :</strong>&nbsp;{{ selectedJob.position }}</p>
+        <p><strong>Start Date :</strong>&nbsp;{{ selectedJob.startDate }}</p>
+        <p><strong>End Date :</strong>&nbsp;{{ selectedJob.endDate }}</p>
+        <p><strong>Company :</strong>&nbsp;{{ getCompanyName(selectedJob.companyId) }}</p>
+        <p><strong>Person :</strong>&nbsp; {{ getPersonName(selectedJob.personId) }}</p>
+      </div>
+    </div>
+  </div>
+</main>

@@ -1,0 +1,42 @@
+<main class="main">
+  <div class="content">
+    <div class="left-side">
+      <button (click)="goHome()">
+        <i class="fas fa-home"></i>
+      </button>
+      <h2>Companies</h2>
+      <ul>
+        <li *ngFor="let company of companies">
+          {{ company.name }}
+          <button (click)="selectCompany(company.id)"><i class="far fa-edit"></i></button>
+          <button (click)="deleteCompany(company.id)"><i class="fas fa-trash"></i></button>
+        </li>
+      </ul>
+      <h3>{{ selectedCompany ? 'Edit Company' : 'Add Company' }}</h3>
+      <form [formGroup]="companyForm" (ngSubmit)="submitForm()">
+        <label>
+          Name :
+          <input type="text" formControlName="name" required />
+        </label>
+        <span *ngIf="checkErrorForm('name')" class="error-message"> Name is required.</span>
+        <br />
+        <button type="submit" [disabled]="companyForm.invalid || (selectedCompany && checkSameForm())"><i class="{{ selectedCompany ? 'fas fa-check' : 'fas fa-plus'}}"></i></button>
+        <button type="button" [disabled]="checkEmptyForm()" (click)="resetForm()"><i class="{{ selectedCompany ? 'fas fa-xmark' : 'fas fa-eraser' }}"></i></button>
+      </form>
+    </div>
+    <div class="divider" role="separator" aria-label="Divider"></div>
+    <div class="right-side">
+      <div *ngIf="selectedCompany">
+        <h3>Company Details</h3>
+        <p><strong>ID :</strong>&nbsp;{{ selectedCompany.id }}</p>
+        <p><strong>Name :</strong>&nbsp;{{ selectedCompany.name }}</p>
+        <p><strong>Associated People :</strong></p>
+        <ul>
+          <li *ngFor="let person of selectedCompany.persons">
+            {{ person }}      
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</main>
